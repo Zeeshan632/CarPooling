@@ -72,7 +72,19 @@ import {
     }
   
     const handleLogin = () => {
+      if(form.email.length > 0 && form.password.length > 0){
+        if(rememberMe){
+          storeCreds(form.email, form.password);
+        }
 
+        dispatch(login(form));
+      }else {
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Please fill out all the fields! 👋'
+        });
+      }
     };
   
     return (

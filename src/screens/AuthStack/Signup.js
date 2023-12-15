@@ -20,15 +20,16 @@ import {
   import BackButton from '../../components/BackButton';
   import { Toast } from 'react-native-toast-message/lib/src/Toast';
   import auth from '@react-native-firebase/auth';
-  import database from '@react-native-firebase/database';
+  import database, {firebase} from '@react-native-firebase/database';
   import Fontisto from 'react-native-vector-icons/Fontisto';
   import images from '../../assets/images';
   import AsyncStorage from '@react-native-async-storage/async-storage';
+import BaseUrls from '../../BaseUrls';
   
   const Signup = ({navigation, route}) => {
     const [secureTextEntry, setSecureTextEntry] = useState(true);
     const [secureConfirmEntry, setSecureConfirmEntry] = useState(true);
-    const [type, setType] = useState('driver');
+    const [type, setType] = useState('passenger');
     const [loading, setLoading] = useState(false);
     const [form, setForm] = useState({
       username: '',
@@ -50,7 +51,9 @@ import {
         auth()
         .createUserWithEmailAndPassword(form.email, form.password)
         .then(({user}) => {
-          database()
+          firebase
+          .app()
+          .database(BaseUrls.fb_realtime_database_endpoint)
           .ref(`/users/${user.uid}`)
           .set({
               userId: user.uid,
@@ -165,15 +168,15 @@ import {
               }
               <Text style={{marginLeft: 10, fontSize: hp('1.8%'), fontWeight: 'bold', color:'black'}}>Sign Up as Driver</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => setType('user')} style={{flexDirection: 'row', alignItems: 'center'}}>
+            <TouchableOpacity onPress={() => setType('passenger')} style={{flexDirection: 'row', alignItems: 'center'}}>
               {
-                type === 'user' ? (
+                type === 'passenger' ? (
                   <Fontisto name='radio-btn-active' size={25} color={'green'} />
                 ) : (
                   <Fontisto name='radio-btn-passive' size={25} color={'green'} />
                 )
               }
-              <Text style={{marginLeft: 10, fontSize: hp('1.8%'), fontWeight: 'bold', color:'black'}}>Sign Up as User</Text>
+              <Text style={{marginLeft: 10, fontSize: hp('1.8%'), fontWeight: 'bold', color:'black'}}>Sign Up as Passenger</Text>
             </TouchableOpacity>
           </View>
   

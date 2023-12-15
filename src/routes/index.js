@@ -9,14 +9,24 @@ import { useSelector } from 'react-redux';
 
 const Stack = createNativeStackNavigator();
 const index = () => {
-  const {userLoggedIn, data} = useSelector(state => state.authData)
+  const {token, data} = useSelector(state => state.authData)
+
+  console.log(token, data)
   
   return (
     <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen name='AuthStack' component={AuthStack} />
-          <Stack.Screen name='PassengerStack' component={PassengerStack} />
-          <Stack.Screen name='DriverStack' component={DriverStack} />
+          {
+            token?.length > 0 ? (
+              data?.userType === 'driver' ? (
+                <Stack.Screen name='DriverStack' component={DriverStack} />
+              ) : (
+                <Stack.Screen name='PassengerStack' component={PassengerStack} />
+              )
+            ) : (
+              <Stack.Screen name='AuthStack' component={AuthStack} />
+            )
+          }
         </Stack.Navigator>
     </NavigationContainer>
   )
